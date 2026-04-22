@@ -1,0 +1,81 @@
+.game-ui {
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+
+.score-display {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    z-index: 1000;
+    color: white;
+    font-family: 'Arial Black', Arial, sans-serif;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+}
+
+.score {
+    font-size: 32px;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.high-score {
+    font-size: 20px;
+    color: #ffff00;
+}
+
+.game-over-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2000;
+}
+
+.game-over-content {
+    text-align: center;
+    color: white;
+    font-family: 'Arial Black', Arial, sans-serif;
+}
+
+.game-over-content h1 {
+    font-size: 64px;
+    color: #ff0000;
+    margin: 0 0 30px 0;
+    text-shadow: 3px 3px 0px rgba(0, 0, 0, 0.8);
+}
+
+.final-score {
+    font-size: 48px;
+    font-weight: bold;
+    margin: 20px 0;
+    color: #ffffff;
+}
+
+.high-score-info {
+    font-size: 40px;
+    color: #ffff00;
+    margin: 20px 0;
+}
+
+.restart-info {
+    font-size: 32px;
+    color: #00ff00;
+    margin-top: 40px;
+    animation: pulse 1s infinite;
+}
+
+@keyframes pulse {
+    0%, 100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.5;
+    }
+}

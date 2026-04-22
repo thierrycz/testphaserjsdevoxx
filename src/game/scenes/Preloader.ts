@@ -9,39 +9,86 @@ export class Preloader extends Scene
 
     init ()
     {
-        //  We loaded this image in our Boot Scene, so we can display it here
         this.add.image(512, 384, 'background');
-
-        //  A simple progress bar. This is the outline of the bar.
         this.add.rectangle(512, 384, 468, 32).setStrokeStyle(1, 0xffffff);
 
-        //  This is the progress bar itself. It will increase in size from the left based on the % of progress.
         const bar = this.add.rectangle(512-230, 384, 4, 28, 0xffffff);
 
-        //  Use the 'progress' event emitted by the LoaderPlugin to update the loading bar
         this.load.on('progress', (progress: number) => {
-
-            //  Update the progress bar (our bar is 464px wide, so 100% = 464px)
             bar.width = 4 + (460 * progress);
-
         });
     }
 
     preload ()
     {
-        //  Load the assets for the game - Replace with your own assets
         this.load.setPath('assets');
-
         this.load.image('logo', 'logo.png');
         this.load.image('star', 'star.png');
     }
 
     create ()
     {
-        //  When all the assets have loaded, it's often worth creating global objects here that the rest of the game can use.
-        //  For example, you can define global animations here, so we can use them in other scenes.
+        const graphics = this.add.graphics();
+        graphics.fillStyle(0xFFD700, 1);
+        graphics.arc(17, 12, 12, 0, Math.PI * 2);
+        graphics.fillPath();
+        graphics.generateTexture('bird', 34, 24);
+        graphics.destroy();
 
-        //  Move to the MainMenu. You could also swap this for a Scene Transition, such as a camera fade.
+        const pipeGfx = this.add.graphics();
+        pipeGfx.fillStyle(0x228B22, 1);
+        pipeGfx.fillRect(0, 0, 80, 400);
+        pipeGfx.lineStyle(2, 0x1a5c1a, 1);
+        pipeGfx.strokeRect(0, 0, 80, 400);
+        pipeGfx.generateTexture('pipe-top', 80, 400);
+        pipeGfx.generateTexture('pipe-bottom', 80, 400);
+        pipeGfx.destroy();
+
+        this.createSoundEffects();
         this.scene.start('MainMenu');
+    }
+
+    private createSoundEffects ()
+    {
+        try
+        {
+            const audioContext = new (window.AudioContext || (window as any).webkitAudioContext)();
+            
+            (window as any).gameAudio = {
+                context: audioContext,
+                playFlap: () => this.playBeep(audioContext, 400, 0.1),
+                playScore: () => this.playBeep(audioContext, 800, 0.1),
+                playGameOver: () => this.playBeep(audioContext, 200, 0.3)
+            };
+        }
+        catch (e)
+        {
+            console.warn('Audio context not available');
+        }
+    }
+
+    private playBeep (audioContext: AudioContext, frequency: number, duration: number)
+    {
+        try
+        {
+            const oscillator = audioContext.createOscillator();
+            const gainNode = audioContext.createGain();
+
+            oscillator.connect(gainNode);
+            gainNode.connect(audioContext.destination);
+
+            oscillator.frequency.value = frequency;
+            oscillator.type = 'sine';
+
+            gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + duration);
+
+            oscillator.start(audioContext.currentTime);
+            oscillator.stop(audioContext.currentTime + duration);
+        }
+        catch (e)
+        {
+            // Silent fail
+        }
     }
 }
