@@ -71,6 +71,7 @@ export class Game extends Scene
         this.paused = false;
         this.lastPassedPipeIndex = -1;
 
+        EventBus.emit('game-started');
         EventBus.emit('current-scene-ready', this);
     }
 
@@ -216,4 +217,5 @@ export class Game extends Scene
         }
     }
 }
+
 
