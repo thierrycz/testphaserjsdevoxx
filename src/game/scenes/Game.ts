@@ -105,6 +105,7 @@ export class Game extends Scene
             if (this.physics.overlap(this.bird, pipe.top) || this.physics.overlap(this.bird, pipe.bottom))
             {
                 this.endGame();
+                return;
             }
 
             if (!this.gameOver && pipe.top.x + 50 < this.bird.x && index > this.lastPassedPipeIndex)
